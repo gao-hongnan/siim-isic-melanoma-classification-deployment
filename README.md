@@ -4,7 +4,7 @@ by Hongnan Gao
 <br>
 </div>
 
-- [Introduction and General Workflow](#introduction-and-general-workflow)
+- [Melanoma Classification with Grad-CAM](#melanoma-classification-with-grad-cam)
   - [Directory Structure](#directory-structure)
   - [Workflows](#workflows)
   - [Config File](#config-file)
@@ -42,9 +42,9 @@ by Hongnan Gao
 ---
 
 
-## Introduction and General Workflow
+## Melanoma Classification with Grad-CAM
 
-This project is about predicting the survivability of coronary artery disease patients.
+This repo is an extension of my team's top 4% (ranked 147/3308) solution to the [SIIM-ISIC Melanoma Classification Challenge](https://www.kaggle.com/c/siim-isic-melanoma-classification) held in 2020. 1.5 years have gone by 
 
 ### Directory Structure
 

@@ -206,7 +206,7 @@ def streamlit_inference(
     return all_preds, mean_tta_score
 
 
-@st.cache(suppress_st_warning=True)
+@st.cache()
 def load_model(
     model_url: str, model_name: str, save_destination_folder: str
 ) -> Path:
