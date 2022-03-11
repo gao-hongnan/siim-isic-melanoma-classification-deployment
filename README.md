@@ -9,6 +9,7 @@ by Hongnan Gao
 - [Directory Structure](#directory-structure)
 - [Workflow](#workflow)
 - [Grad-CAM](#grad-cam)
+- [Demo App](#demo-app)
 
 
 ---
@@ -66,3 +67,9 @@ A word of caution however, is that I removed all `+cu` from the `requirements.tx
 ## Grad-CAM
 
 I have been working on Grad-CAM for a while now, and I have a [tutorial](https://reighns92.github.io/reighns-ml-blog/reighns_ml_journey/deep_learning/computer_vision/general/neural_network_interpretation/05_gradcam_and_variants/gradcam_explained/) on it. The [paper](https://arxiv.org/abs/1610.02391) is the original paper and the implementation in python is [here](https://reighns92.github.io/reighns-ml-blog/reighns_ml_journey/deep_learning/computer_vision/general/neural_network_interpretation/05_gradcam_and_variants/gradcam_from_scratch/).
+
+## Demo App
+
+This project features [an interactive web app](https://share.streamlit.io/reighns92/siim-isic-melanoma-classification-deploymenty) that uses traditional Convolutioons Neural Networks. Here is a short gif illustrating it.
+
+![web_app](https://storage.googleapis.com/reighns/reighns_ml_projects/docs/projects/SIIM-ISIC%20Melanoma%20Classification/images/webapp_demo.gif)
