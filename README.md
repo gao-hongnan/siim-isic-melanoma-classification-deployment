@@ -10,10 +10,10 @@ by Hongnan Gao
 - [Workflow](#workflow)
 - [Grad-CAM](#grad-cam)
 - [Demo App](#demo-app)
+- [References and Citations](#references-and-citations)
 
 
 ---
-
 
 ## Melanoma Classification with Grad-CAM
 
@@ -73,3 +73,7 @@ I have been working on Grad-CAM for a while now, and I have a [tutorial](https:/
 This project features [an interactive web app](https://share.streamlit.io/reighns92/siim-isic-melanoma-classification-deploymenty) that uses traditional Convolutioons Neural Networks. Here is a short gif illustrating it.
 
 ![web_app](https://storage.googleapis.com/reighns/reighns_ml_projects/docs/projects/SIIM-ISIC%20Melanoma%20Classification/images/webapp_demo.gif)
+
+## References and Citations
+
+- [kozodoi's github](https://github.com/kozodoi/Pet_Pawpularity)
