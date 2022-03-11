@@ -452,4 +452,27 @@ def main():
                 gc.collect()
 
 
+def contact_information():
+    """Contact information."""
+
+    # The below contact information is referenced from https://github.com/kozodoi/Pet_Pawpularity/blob/main/web_app.py
+
+    # header
+    st.header("Contact")
+
+    # website link
+    st.write(
+        "Check out [my website](https://kozodoi.me) for ML blog, academic publications, Kaggle solutions and more of my work."
+    )
+
+    # profile links
+    st.write(
+        "[![Linkedin](https://img.shields.io/badge/-LinkedIn-306EA8?style=flat&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/reighnss/)](https://www.linkedin.com/in/reighnss/) [![Kaggle](https://img.shields.io/badge/-Kaggle-5DB0DB?style=flat&logo=Kaggle&logoColor=white&link=https://www.kaggle.com/reighns)](https://www.kaggle.com/reighns) [![GitHub](https://img.shields.io/badge/-GitHub-2F2F2F?style=flat&logo=github&logoColor=white&link=https://github.com/reigHns92)](https://github.com/reigHns92)"
+    )
+
+    # copyright
+    st.text("© 2022 Hongnan Gao")
+
+
 main()
+contact_information()

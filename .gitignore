@@ -4,7 +4,6 @@ data/
 model/
 *.pth
 experiments/
-app/model_weights
 
 # wandb
 wandb/
