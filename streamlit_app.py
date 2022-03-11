@@ -206,13 +206,15 @@ def streamlit_inference(
     return all_preds, mean_tta_score
 
 
-@st.cache()
+@st.cache(suppress_st_warning=True)
 def load_model(
     model_url: str, model_name: str, save_destination_folder: str
 ) -> Path:
     """This function loads the model from the model_url and saves it to the save_destination_folder.
 
     The st.cache decorator is used to cache the model for faster loading.
+
+    Caution: The cache will throw an error when a new model weight is put, remove suppress_st_warning=True to see the error.
 
     Args:
         model_url (str): The url of the model to be loaded.
@@ -462,7 +464,7 @@ def contact_information():
 
     # website link
     st.write(
-        "Check out [my website](https://kozodoi.me) for ML blog, academic publications, Kaggle solutions and more of my work."
+        "Check out [my Machine Learning Blog](https://reighns92.github.io/reighns-ml-blog/about/) for doses of mathematics, deep learning and best software engineering practices."
     )
 
     # profile links

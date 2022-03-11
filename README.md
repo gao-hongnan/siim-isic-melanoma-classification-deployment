@@ -5,38 +5,10 @@ by Hongnan Gao
 </div>
 
 - [Melanoma Classification with Grad-CAM](#melanoma-classification-with-grad-cam)
-  - [Directory Structure](#directory-structure)
-  - [Workflows](#workflows)
-  - [Config File](#config-file)
-  - [Typical ML-Workflow](#typical-ml-workflow)
-- [Clarify the Problem and Constraints](#clarify-the-problem-and-constraints)
-- [Understand Your Data Sources](#understand-your-data-sources)
-- [Establish Metrics](#establish-metrics)
-  - [Benefit Structure](#benefit-structure)
-  - [ROC](#roc)
-  - [Brier Score Loss](#brier-score-loss)
-  - [What could I have done better?](#what-could-i-have-done-better)
-- [Explore Data (EDA and Data Inspection/Cleaning)](#explore-data-eda-and-data-inspectioncleaning)
-  - [What did EDA and Data Inspection tell us?](#what-did-eda-and-data-inspection-tell-us)
-- [Feature Engineering and Preprocessing Steps](#feature-engineering-and-preprocessing-steps)
-  - [Preprocessing Pipeline](#preprocessing-pipeline)
-  - [What could I have done better?](#what-could-i-have-done-better-1)
-- [Cross-Validation Strategy](#cross-validation-strategy)
-  - [Step 1: Train-Test-Split](#step-1-train-test-split)
-  - [Step 2: Resampling Strategy](#step-2-resampling-strategy)
-  - [Cross-Validation Workflow](#cross-validation-workflow)
-- [Preliminary Model Selection and Algorithm Spot-Checking](#preliminary-model-selection-and-algorithm-spot-checking)
-  - [Preliminary Model Selection (Model Design and Choice) (Importance of EDA)](#preliminary-model-selection-model-design-and-choice-importance-of-eda)
-  - [Algorithm Spot-Checking](#algorithm-spot-checking)
-    - [Evaluation Results across Folds](#evaluation-results-across-folds)
-    - [Naive Error Analysis](#naive-error-analysis)
-- [Next Steps](#next-steps)
-  - [Hyperparameter Tuning](#hyperparameter-tuning)
-  - [Retrain on the whole training set](#retrain-on-the-whole-training-set)
-  - [Interpretation of Results](#interpretation-of-results)
-  - [Benefit Structure and Cost Benefit Analysis](#benefit-structure-and-cost-benefit-analysis)
-  - [Model Persistence and Reproducibility](#model-persistence-and-reproducibility)
-  - [MLOps and CI/CD](#mlops-and-cicd)
+- [Competition Description](#competition-description)
+- [Directory Structure](#directory-structure)
+- [Workflow](#workflow)
+- [Grad-CAM](#grad-cam)
 
 
 ---
@@ -44,215 +16,53 @@ by Hongnan Gao
 
 ## Melanoma Classification with Grad-CAM
 
-This repo is an extension of my team's top 4% (ranked 147/3308) solution to the [SIIM-ISIC Melanoma Classification Challenge](https://www.kaggle.com/c/siim-isic-melanoma-classification) held in 2020. 1.5 years have gone by 
+This repo is an extension of my team's top 4% (ranked 147/3308) solution to the [SIIM-ISIC Melanoma Classification Challenge](https://www.kaggle.com/c/siim-isic-melanoma-classification) held in 2020. 1.5 years have gone by and I decided to deploy the model as a simple webapp with a simple UI consisting of both the predictions and the visualization of the grad-cam.
 
-### Directory Structure
+![cover](https://storage.googleapis.com/reighns/reighns_ml_projects/docs/projects/SIIM-ISIC%20Melanoma%20Classification/images/cover_page_SIIM-ISIC%20Melanoma%20Classification.png)
 
-The brief overview of the folder structure is detailed below. Note that `main.py` is the script that `run.sh` will execute. 
+## Competition Description
 
-```bash
-├──data
-|    ├──              - raw file
-├──config
-|    ├── config.py              - configuration file
-├──notebooks
-|    ├── ...
-|    ├── ...
-|    ├── ...
-|    ├── ...
-├──src
-|    ├── __init__.py            - make this directory as a Python package
-|    ├── metrics_results.py     - functions and classes to store metrics and model results
-|    ├── make_folds.py          - make cross-validation folds
-|    ├── models.py              - model
-|    ├── train.py               - training/optimization pipelines
-|    ├── preprocess.py          - preprocessing functions
-|    └── utils.py               - utility functions
-├── main.py                - main script to call files from src
-├── README.md
-├── requirements.txt
-├── run.sh
-```
+Skin cancer is the most prevalent type of cancer. Melanoma, specifically, is responsible for 75% of skin cancer deaths, despite being the least common skin cancer. The American Cancer Society estimates over 100,000 new melanoma cases will be diagnosed in 2020. It's also expected that almost 7,000 people will die from the disease. As with other cancers, early and accurate detection—potentially aided by data science—can make treatment more effective.
 
----
+Currently, dermatologists evaluate every one of a patient's moles to identify outlier lesions or “ugly ducklings” that are most likely to be melanoma. Existing AI approaches have not adequately considered this clinical frame of reference. Dermatologists could enhance their diagnostic accuracy if detection algorithms take into account “contextual” images within the same patient to determine which images represent a melanoma. If successful, classifiers would be more accurate and could better support dermatological clinic work.
 
-### Workflows
+As the leading healthcare organization for informatics in medical imaging, the Society for Imaging Informatics in Medicine (SIIM)'s mission is to advance medical imaging informatics through education, research, and innovation in a multi-disciplinary community. SIIM is joined by the International Skin Imaging Collaboration (ISIC), an international effort to improve melanoma diagnosis. The ISIC Archive contains the largest publicly available collection of quality-controlled dermoscopic images of skin lesions.
 
+In this competition, you’ll identify melanoma in images of skin lesions. In particular, you’ll use images within the same patient and determine which are likely to represent a melanoma. Using patient-level contextual information may help the development of image analysis tools, which could better support clinical dermatologists.
 
----
+Melanoma is a deadly disease, but if caught early, most melanomas can be cured with minor surgery. Image analysis tools that automate the diagnosis of melanoma will improve dermatologists' diagnostic accuracy. Better detection of melanoma has the opportunity to positively impact millions of people. - [SIIM-ISIC Melanoma Classification Challenge](https://www.kaggle.com/c/siim-isic-melanoma-classification)
 
-### Config File
+## Directory Structure
 
-For small projects and quick prototyping I like to use `dataclass` as my config. For the purpose of the examiners, one can add in scikit-learn's model alongside its hyperparameters in the `classifiers` list below.
-
-The good thing about `dataclass` is I can define methods like `to_yaml` and dump the whole configuration into a `yaml` file should I need to. Furthermore, the `class` allows me to define custom functionalities easily.
-
+Note that most of the scripts in this repo is used for training, for the purpose of deployment, we just need to concentrade on the below:
 
 ```python
-@dataclass
-class config:
-    raw_data: str = "data/survive.db"
-    processed_data: str = ""
-
-    seed: int = 1992
-    classification_type: str = "binary"
-    classifiers = [
-        # baseline model
-        dummy.DummyClassifier(random_state=1992, strategy="stratified"),
-        # linear model
-        linear_model.LogisticRegression(random_state=1992, solver="liblinear"),
-        # # tree
-        tree.DecisionTreeClassifier(random_state=1992),
-        # ensemble
-        ensemble.RandomForestClassifier(n_estimators=10, random_state=1992),
-    ]
-    cv_params: Dict[str, Any] = field(
-        default_factory=lambda: {
-            "cv_schema": "StratifiedGroupKFold",
-            "num_folds": 6,
-            "train_size": 0.9,
-            "shuffle": True,
-            "group_kfold_split": "ID",
-            "seed": 1992,
-        }
-    )
-
-
-    def to_dict(self) -> Dict[str, Any]:
-        """Convert the config object to a dictionary.
-
-        Returns:
-            Dict: The config object as a dictionary.
-        """
-
-        return asdict(self)
-
-    def to_yaml(self, filepath: Union[str, Path]) -> str:
-        """Convert the config object to a YAML string and write to file.
-
-        Args:
-            filepath (Union[str, Path]): The filepath to write the YAML string to.
-
-        Returns:
-            str: The config object as YAML string.
-        """
-        return yaml.dump(self.to_dict(), filepath)
+streamlit_app.py
+app/
 ```
 
----
-
-### Typical ML-Workflow
-
-The below is a typical ML workflow. We will however follow Nick Singh and Kevin Huo's Ace the Data Science Interview's workflow.
-
-- Data Collection and Ingestion
-- Data Extraction (can involve Feature Engineering)
-- Data Visualization (understanding data)
-- Data Pre-processing
-- Model Choice/Design Selection
-- Model Training
-- Model Evaluation Validation
-- Model Interpretability
-- Model Deployment and CI/CD
+`streamlit_app.py` is the main entry point of the webapp and is almost self-contained, with some dependencies on my `src/` codes. `app/` is the main directory of the webapp with weights and images stored.
 
 ---
 
-## Clarify the Problem and Constraints
+## Workflow
 
+`requirements.txt` is the list of dependencies for the webapp, both suitable for training and deployment. 
 
-## Understand Your Data Sources
+To setup the environment, we can do the following:
 
+```bash
+# Assuming Windows
+python -m venv venv_streamlit
+venv_streamlit\Scripts\activate
+python -m pip install --upgrade pip setuptools wheel # upgrade pip
+pip install -e .  # installs required packages only    
+```
 
-
-## Establish Metrics
-
-
-### Benefit Structure
-
-
-### ROC
-
-
-### Brier Score Loss
-
-
-
-### What could I have done better?
-
-
-## Explore Data (EDA and Data Inspection/Cleaning)
-
-
-
-### What did EDA and Data Inspection tell us?
-
-
-
-## Feature Engineering and Preprocessing Steps
-
-
-
-### Preprocessing Pipeline
-
-
-
-### What could I have done better?
-
-
-## Cross-Validation Strategy
-
-
-### Step 1: Train-Test-Split
-
-
-### Step 2: Resampling Strategy
-
-
-
-### Cross-Validation Workflow
-
-
-
-
-## Preliminary Model Selection and Algorithm Spot-Checking
-
-### Preliminary Model Selection (Model Design and Choice) (Importance of EDA)
-
-
-### Algorithm Spot-Checking
-
-#### Evaluation Results across Folds
-
-
-#### Naive Error Analysis
-
-
+A word of caution however, is that I removed all `+cu` from the `requirements.txt` file. This is because I have not yet figured out how to install the **CUDA** version of the `pytorch` package in **Streamlit Cloud**. I believe this is a known issue and should be on their future roadmap. Consequently, if one wants to train models using my scripts, it is best to go my [main repo](https://github.com/reigHns92/siim-isic-melanoma-classification) to do so.
 
 ---
 
-## Next Steps
+## Grad-CAM
 
-### Hyperparameter Tuning
-
-
-
-### Retrain on the whole training set
-
-
-
-### Interpretation of Results
-
-
-
-### Benefit Structure and Cost Benefit Analysis
-
-
-
-### Model Persistence and Reproducibility
-
-
-
-### MLOps and CI/CD
-
-
-
+I have been working on Grad-CAM for a while now, and I have a [tutorial](https://reighns92.github.io/reighns-ml-blog/reighns_ml_journey/deep_learning/computer_vision/general/neural_network_interpretation/05_gradcam_and_variants/gradcam_explained/) on it. The [paper](https://arxiv.org/abs/1610.02391) is the original paper and the implementation in python is [here](https://reighns92.github.io/reighns-ml-blog/reighns_ml_journey/deep_learning/computer_vision/general/neural_network_interpretation/05_gradcam_and_variants/gradcam_from_scratch/).
