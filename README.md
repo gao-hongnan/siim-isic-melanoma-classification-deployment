@@ -62,6 +62,8 @@ pip install -e .  # installs required packages only
 
 A word of caution however, is that I removed all `+cu` from the `requirements.txt` file. This is because I have not yet figured out how to install the **CUDA** version of the `pytorch` package in **Streamlit Cloud**. I believe this is a known issue and should be on their future roadmap. Consequently, if one wants to train models using my scripts, it is best to go my [main repo](https://github.com/reigHns92/siim-isic-melanoma-classification) to do so.
 
+Also, you may need to re-commit sometimes if the app goes to sleep.
+
 ---
 
 ## Grad-CAM
