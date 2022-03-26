@@ -72,7 +72,7 @@ I have been working on Grad-CAM for a while now, and I have a [tutorial](https:/
 
 ## Demo App
 
-This project features [an interactive web app](https://share.streamlit.io/reighns92/siim-isic-melanoma-classification-deploymenty) that uses traditional Convolutioons Neural Networks. Here is a short gif illustrating it.
+This project features [an interactive web app](https://share.streamlit.io/reighns92/siim-isic-melanoma-classification-deployment) that uses traditional Convolutioons Neural Networks. Here is a short gif illustrating it.
 
 ![web_app](https://storage.googleapis.com/reighns/reighns_ml_projects/docs/projects/SIIM-ISIC%20Melanoma%20Classification/images/webapp_demo.gif)
 
